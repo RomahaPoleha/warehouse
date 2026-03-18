@@ -1,0 +1,69 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>Мат. платы и платы питания для панелей на базе Андроид</h1>
+    <br>
+
+    <!-- Row вынесен ЗА пределы цикла, чтобы карточки встали в сетку -->
+    <div class="row g-3">
+        {% for board in board_android %}
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <div class="card h-100 shadow-sm">
+
+                <!-- БЛОК С КАРТИНКОЙ -->
+                {% if board.image %}
+                    <div class="overflow-hidden" style="height: 200px;">
+                        <img src="{{ board.image.url }}"
+                             class="card-img-top zoom-img w-100 h-100"
+                             style="object-fit: cover;"
+                             alt="{{ board.name }}"
+                             data-bs-toggle="modal"
+                             data-bs-target="#imageModal"
+                             data-bs-src="{{ board.image.url }}">
+                    </div>
+                {% else %}
+                    <!-- Заглушка, если картинки нет -->
+                    <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                        <span class="text-muted">Нет фото</span>
+                    </div>
+                {% endif %}
+
+                <!-- ТЕЛО КАРТОЧКИ -->
+                <div class="card-body">
+                    <h5 class="card-title">{{ board.name }}</h5>
+                    <p class="card-text">
+                        <strong>Количество:</strong> {{ board.quantity }} шт.<br>
+                        <strong>Модификация:</strong> {{ board.modification }}<br>
+                        <strong>Модель:</strong> {{ board.model }}<br>
+                        <strong class="text-primary">Место хранения:</strong> {{ board.cells }}<br>
+                        <strong>Описание:</strong> {{ board.description|default:"—" }}
+                    </p>
+                    <a href="{% url 'request_boards_android' board.pk %}" class="btn btn-success">
+                    📤 Запросить
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">Плат пока нет в наличии.</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО (Должно быть вне цикла, один раз на страницу) -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Просмотр изображения</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-0">
+                    <img src="" alt="Full size image" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
