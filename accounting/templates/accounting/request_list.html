@@ -1,0 +1,66 @@
+{% extends "accounting/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📋 Все заявки</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Оборудование</th>
+                <th>Количество</th>
+                <th>Кем запрошено</th>
+                <th>Дата создания запроса</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in req_pending %}
+            <tr>
+                 <td>{{ req.equipment.name }} <br>
+                        <small class="text-muted">Модель : {{ req.equipment.model }}</small><br>
+                     {% if req.equipment.modification %}
+                        <small class="text-muted">Модификация : {{ req.equipment.modification }}</small><br>
+                        {% elif req.equipment.length_cm %}
+                        <small class="text-muted">Длина : {{ req.equipment.length_cm }} см</small>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ req.quantity_requested }} шт.</td>
+                    <td>{{ req.requested_by.username }}</td>
+                    <td>{{ req.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        {% if req.status == 'pending' %}
+                            <span class="badge bg-warning">Ожидает</span>
+                        {% elif req.status == 'confirmed' %}
+                            <span class="badge bg-success">Выдано</span>
+                        {% else %}
+                            <span class="badge bg-danger">Отклонено</span>
+                        {% endif %}
+                    </td>
+                <td>
+                    {% if req.status == 'pending' %}
+                    <form action="{% url 'confirm_request' req.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Выдать</button>
+                        </form>
+                    <form action="#" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Отклонить</button>
+                        </form>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">Заявок пока нет</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'home' %}" class="btn btn-secondary">← На главную</a>
+</div>
+{% endblock %}
