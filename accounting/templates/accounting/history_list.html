@@ -1,0 +1,70 @@
+{% extends "accounting/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📋 История выдачи </h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Оборудование</th>
+                <th>Количество</th>
+                <th>Выдал</th>
+                <th>Дата выдачи</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for req in req_history %}
+    <tr>
+        <td>
+            {{ req.equipment.name }} <br>
+            <small class="text-muted">Модель : {{ req.equipment.model }}</small><br>
+            {% if req.equipment.modification %}
+                <small class="text-muted">Модификация : {{ req.equipment.modification }}</small><br>
+            {% elif req.equipment.length_cm %}
+                <small class="text-muted">Длина : {{ req.equipment.length_cm }} см</small>
+            {% endif %}
+        </td>
+
+        <td>{{ req.quantity_requested }} шт.</td>
+
+        <!-- Исправленная колонка "Выдал" -->
+        <td>
+            {% if req.approved_user %}
+                {{ req.approved_user.username }}
+            {% else %}
+                <span class="text-muted">—</span>
+            {% endif %}
+        </td>
+
+        <!-- Исправленная колонка "Дата выдачи" -->
+        <td>
+            {% if req.confirmed_at %}
+                {{ req.confirmed_at|date:"d.m.Y H:i" }}
+            {% else %}
+                <span class="text-muted">—</span>
+            {% endif %}
+        </td>
+
+        <td>
+            {% if req.status == 'pending' %}
+                <span class="badge bg-warning">Ожидает</span>
+            {% elif req.status == 'confirmed' %}
+                <span class="badge bg-success">Выдано</span>
+            {% else %}
+                <span class="badge bg-danger">Отклонено</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="5" class="text-center">Выданных заявок нет</td>
+    </tr>
+    {% endfor %}
+</tbody>
+    </table>
+
+    <a href="{% url 'home' %}" class="btn btn-secondary">← На главную</a>
+</div>
+{% endblock %}

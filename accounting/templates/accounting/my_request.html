@@ -1,0 +1,53 @@
+{% extends "accounting/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📋 Мои заявки</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Оборудование</th>
+                <th>Количество</th>
+                <th>Дата запроса</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in user_requests %}
+            <tr>
+                <td>{{ req.equipment.name }} <br>
+                        <small class="text-muted">Модель : {{ req.equipment.model }}</small><br>
+                     {% if req.equipment.modification %}
+                        <small class="text-muted">Модификация : {{ req.equipment.modification }}</small><br>
+                        {% elif req.equipment.length_cm %}
+                        <small class="text-muted">Длина : {{ req.equipment.length_cm }} см</small>
+                        {% endif %}
+                    </td>
+                <td>{{ req.quantity_requested }} шт.</td>
+                <td>{{ req.created_at|date:"d.m.Y H:i" }}</td>
+                <td>
+                    {% if req.status == 'pending' %}
+                        <span class="badge bg-warning">Ожидает</span>
+                    {% elif req.status == 'confirmed' %}
+                        <span class="badge bg-success">Выдано</span>
+                    {% else %}
+                        <span class="badge bg-danger">Отклонено</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">У вас пока нет заявок</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'home' %}" class="btn btn-secondary">← На главную</a>
+</div>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,115 @@
+{% extends "accounting/base.html" %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+<br><br><br>
+
+<style>
+body{background:url(https://bootstraptema.ru/images/bg/bg-3.png)}
+.btn{
+ position: relative;
+ color:#fff;
+ border-radius:30px;
+ text-transform: uppercase;
+ transform: scale(1.1,1.1);
+ transition:all 0.3s ease-out 0s;
+}
+.btn:hover{
+ transform: scale(1,1);
+ color:#fff;
+}
+.btn i{
+ margin-right:15px;
+ color:#fff;
+}
+.btn:before {
+ content: "";
+ position: absolute;
+ bottom: -8px;
+ left:0px;
+ width:100%;
+ height: 10px;
+ filter: blur(20px);
+ border-radius: 30px;
+ display: inline-block;
+ z-index: -1;
+ transition: all 0.3s ease-out 0s;
+}
+.btn:hover:before{
+ bottom:0;
+ filter: blur(10px);
+}
+.btn.blue{
+ background: linear-gradient(to left, #7474bf , #348ac7);
+}
+.btn.blue:before{
+ background: linear-gradient(to right,#7474bf,#348ac7);
+}
+.btn.green{
+ background: linear-gradient(to left, #414d0b , #727a17);
+}
+.btn.green:before{
+ background: linear-gradient(to right,#414d0b,#727a17);
+}
+
+.btn.orange{
+ background: linear-gradient(to left, #fe8c00 , #f83600);
+}
+.btn.orange:before{
+ background: linear-gradient(to right,#fe8c00,#f83600);
+}
+.btn.purple{
+ background: linear-gradient(to left, #c04848 , #480048);
+}
+.btn.purple:before{
+ background: linear-gradient(to right,#c04848,#480048);
+}
+@media only screen and (max-width: 767px){
+ .btn{
+ margin-bottom:15px;
+ }
+}
+/* отступ */
+.pad-15{
+ padding: 15px 0;
+}
+</style>
+
+<div class="container px-0">
+    <div class="row g-3">
+
+        <!-- Платы питания -->
+        <div class="col-12">
+            <a href="{% url 'board_android_list' %}" class="btn btn-lg blue w-100">
+                <i class="fa fa-plug"></i> Платы питания и материнские платы для Андроида
+            </a>
+        </div>
+
+        <!-- Панели Windows -->
+        <div class="col-12">
+            <a href="{% url 'board_windows_list' %}" class="btn btn-lg green w-100">
+                <i class="fa fa-desktop"></i> Платы питания и материнские платы панелей на базе Windows
+            </a>
+        </div>
+
+        <!-- Tcon-ы -->
+        <div class="col-12">
+            <a href="{% url 'tcon_list' %}" class="btn btn-lg orange w-100">
+                <i class="fa fa-microchip"></i> Tcon-ы для панелей Android/Windows
+            </a>
+        </div>
+
+        <!-- Шлейфа -->
+        <div class="col-12">
+            <a href="{% url 'cable_list' %}" class="btn btn-lg purple w-100">
+                <i class="fa fa-link"></i> Шлейфа
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+

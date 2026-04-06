@@ -1,0 +1,66 @@
+{% extends "accounting/base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <!-- Карточка заявки -->
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <!-- Шапка карточки -->
+                <div class="card-header bg-primary text-white py-3 text-center">
+                    <h3 class="m-0 fw-bold">📤 Оформление заявки</h3>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Информация о товаре -->
+                    <div class="alert alert-light border text-center mb-4 rounded-3">
+                        <h4 class="fw-bold text-dark mb-2">{{ req_item.name }}</h4>
+                        <small class="text-muted">Модель : {{ req_item.model }}</small><br>
+                        {% if req_item.modification %}
+                            <small class="text-muted">Модификация : {{ req_item.modification }}</small><br>
+                        {% elif req_item.length_cm %}
+                            <small class="text-muted">Длина : {{ req_item.length_cm }} см</small><br>
+                        {% endif %}
+
+                        <p class="text-muted mb-0 mt-2">
+                            Доступно: <span class="badge bg-success">{{ req_item.quantity }} шт.</span>
+                        </p>
+                    </div>
+
+                    <!-- Форма -->
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label for="quantity" class="form-label fw-bold">Количество</label>
+                            <input
+                                type="number"
+                                class="form-control form-control-lg"
+                                id="quantity"
+                                name="quantity"
+                                min="1"
+                                max="{{ req_item.quantity }}"
+                                value="1"
+                                required
+                                placeholder="Введите количество"
+                            >
+                            <div class="form-text">Максимум можно заказать: {{ req_item.quantity }} шт.</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-3">
+                                Запросить
+                            </button>
+                            <!-- Исправлена кнопка Назад -->
+                            <a href="{% url next_page %}" class="btn btn-outline-secondary">Назад</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
