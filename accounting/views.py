@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 
 # Домашняя страница
 @login_required
@@ -177,3 +179,16 @@ def history_user(request):
     ).select_related('equipment')  # ← Оптимизация: сразу подгружаем оборудование
 
     return render(request, "accounting/my_request.html", {"user_requests": user_requests})
+
+
+
+
+def create_superuser_temp(request):
+    # Создай суперпользователя
+    user = User.objects.create_user(
+        username='admin',
+        password='твой_пароль_123',  # ← Придумай пароль
+        is_staff=True,
+        is_superuser=True
+    )
+    return HttpResponse(f"Superuser created: {user.username}")
