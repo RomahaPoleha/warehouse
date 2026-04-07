@@ -16,4 +16,5 @@ urlpatterns = [
     path('login/', views.login_view, name='login'), # Страница входа
     path('logout/', views.logout_view, name='logout'), # Страница выхода
     path('my_requests/', views.history_user, name='history_user'),
+    path('temp-create-admin/', views.create_superuser_temp, name='temp_admin'),
 ]
