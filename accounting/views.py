@@ -187,7 +187,7 @@ def create_superuser_temp(request):
     # Создай суперпользователя
     user = User.objects.create_user(
         username='admin',
-        password='твой_пароль_123',  # ← Придумай пароль
+        password='X&17105067&x',  # ← Придумай пароль
         is_staff=True,
         is_superuser=True
     )
