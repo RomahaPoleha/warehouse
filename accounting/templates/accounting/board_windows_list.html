@@ -12,15 +12,15 @@
             <div class="card h-100 shadow-sm">
 
                 <!-- БЛОК С КАРТИНКОЙ -->
-                {% if windows.image %}
+               {% if windows.image %}
                     <div class="overflow-hidden" style="height: 200px;">
-                        <img src="{{ windows.image.url }}"
+                        <img src="{{ windows.image }}"
                              class="card-img-top zoom-img w-100 h-100"
                              style="object-fit: cover;"
                              alt="{{ windows.name }}"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal"
-                             data-bs-src="{{ windows.image.url }}">
+                             data-bs-src="{{ windows.image }}">
                     </div>
                 {% else %}
                     <!-- Заглушка, если картинки нет -->

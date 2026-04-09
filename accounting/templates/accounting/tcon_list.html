@@ -11,16 +11,15 @@
         <div class="col-6 col-md-4 col-lg-3 mb-4">
             <div class="card h-100 shadow-sm">
 
-                <!-- БЛОК С КАРТИНКОЙ -->
                 {% if tcon.image %}
                     <div class="overflow-hidden" style="height: 200px;">
-                        <img src="{{ tcon.image.url }}"
+                        <img src="{{ tcon.image }}"
                              class="card-img-top zoom-img w-100 h-100"
                              style="object-fit: cover;"
                              alt="{{ tcon.name }}"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal"
-                             data-bs-src="{{ tcon.image.url }}">
+                             data-bs-src="{{ tcon.image }}">
                     </div>
                 {% else %}
                     <!-- Заглушка, если картинки нет -->

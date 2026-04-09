@@ -14,13 +14,13 @@
                 <!-- БЛОК С КАРТИНКОЙ -->
                 {% if board.image %}
                     <div class="overflow-hidden" style="height: 200px;">
-                        <img src="{{ board.image.url }}"
+                        <img src="{{ board.image }}"
                              class="card-img-top zoom-img w-100 h-100"
                              style="object-fit: cover;"
                              alt="{{ board.name }}"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal"
-                             data-bs-src="{{ board.image.url }}">
+                             data-bs-src="{{ board.image }}">
                     </div>
                 {% else %}
                     <!-- Заглушка, если картинки нет -->

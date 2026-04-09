@@ -30,7 +30,7 @@ class Equipment(models.Model):
     cells = models.CharField(max_length=100, verbose_name="Место хранения", blank=True)
 
     # Медиа и описание
-    image = models.ImageField(upload_to='images/equipment/', verbose_name="Картинка", blank=True, null=True)
+    image = models.URLField(max_length=500, blank=True, verbose_name='Ссылка на фото', default='')
     description = models.TextField(verbose_name="Описание", blank=True)
 
     class Meta:

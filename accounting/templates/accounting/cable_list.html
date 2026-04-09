@@ -14,13 +14,13 @@
                 <!-- БЛОК С КАРТИНКОЙ -->
                 {% if cable.image %}
                     <div class="overflow-hidden" style="height: 200px;">
-                        <img src="{{ cable.image.url }}"
+                        <img src="{{ cable.image }}"
                              class="card-img-top zoom-img w-100 h-100"
                              style="object-fit: cover;"
                              alt="{{ cable.name }}"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal"
-                             data-bs-src="{{ cable.image.url }}">
+                             data-bs-src="{{ cable.image }}">
                     </div>
                 {% else %}
                     <!-- Заглушка, если картинки нет -->
