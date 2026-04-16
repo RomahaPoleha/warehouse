@@ -24,7 +24,7 @@ class Equipment(models.Model):
     # Поля которые есть не у всех и могут быть пустыми
     modification = models.CharField(max_length=100, blank=True, verbose_name="Модификация")
     length_cm = models.PositiveIntegerField(verbose_name="Длина (см)", null=True, blank=True)
-
+    cpu = models.CharField(max_length=10, verbose_name="Процессор", blank=True)
     # Поля с количеством и место хранения
     quantity = models.PositiveIntegerField(verbose_name="Количество", default=0)
     cells = models.CharField(max_length=100, verbose_name="Место хранения", blank=True)

@@ -4,7 +4,26 @@
 {% block content %}
     <h1>Мат. платы и платы питания для панелей на Windows</h1>
     <br>
-
+    <!-- ПОИСКОВАЯ СТРОКА -->
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Поиск по наименованию модели..."
+                value="{{ query }}"
+            >
+            <button class="btn btn-primary" type="submit">
+                🔍 Найти
+            </button>
+            {% if query %}
+            <a href="{% url 'board_windows_list' %}" class="btn btn-secondary">
+                ✕ Сбросить
+            </a>
+            {% endif %}
+        </div>
+    </form>
     <!-- Row вынесен ЗА пределы цикла, чтобы карточки встали в сетку -->
     <div class="row g-3">
         {% for windows in board_windows %}
@@ -12,7 +31,7 @@
             <div class="card h-100 shadow-sm">
 
                 <!-- БЛОК С КАРТИНКОЙ -->
-               {% if windows.image %}
+                 {% if windows.image %}
                     <div class="overflow-hidden" style="height: 200px;">
                         <img src="{{ windows.image }}"
                              class="card-img-top zoom-img w-100 h-100"
@@ -34,6 +53,7 @@
                     <h5 class="card-title">{{ windows.name }}</h5>
                     <p class="card-text">
                         <strong>Модель:</strong> {{ windows.model }}<br>
+                        <strong>Процессор</strong> {{ windows.cpu }}<br>
                         <strong>Количество:</strong> {{ windows.quantity }} шт.<br>
                         <strong class="text-primary">Место хранения:</strong> {{ windows.cells }}<br>
                         <strong>Описание:</strong> {{ windows.description|default:"—" }}
@@ -44,9 +64,27 @@
             </div>
         </div>
         {% empty %}
-            <div class="col-12">
-                <div class="alert alert-info">Плат пока нет в наличии.</div>
+
+        <!-- Информация после ввода в поиске-->
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-5">
+                    {% if has_query %}
+                        <h4 class="mb-3">Ничего не найдено</h4>
+                        <p class="text-muted mb-4">
+                            По запросу "<strong>{{ query }}</strong>" ничего не найдено.
+                        </p>
+                        <a href="{% url 'board_windows_list' %}" class="btn btn-primary">
+                            Сбросить фильтр и вернутся к списку плат
+                        </a>
+                    {% else %}
+                    <div class="col-12">
+                         <div class="alert alert-info">Тут пока нечего нет.</div>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
+        </div>
         {% endfor %}
     </div>
 

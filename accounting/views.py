@@ -6,7 +6,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
-
+from django.db.models import Q
 
 
 # Домашняя страница
@@ -17,26 +17,39 @@ def home(request):
 @login_required
 # Список устройст на базе андроид
 def board_android(request):
+    query = request.GET.get('q','').strip()
     board_androids = Equipment.objects.filter(equip_type=EquipmentType.ANDROID_BOARD)
-    return render(request, 'accounting/board_android_list.html', {'board_androids': board_androids})
+    if query:
+        board_androids = board_androids.filter(Q(name__icontains=query)| Q(model__icontains=query)|Q(modification__icontains=query))
+
+    return render(request, 'accounting/board_android_list.html', {'board_androids': board_androids,'query':query, 'has_query': bool(query)})
 
 @login_required
 # Список устройст на базе Windows
 def board_windows(request):
+    query = request.GET.get("q","").strip()
     board_windows = Equipment.objects.filter(equip_type=EquipmentType.WINDOWS_BOARD)
-    return render(request, 'accounting/board_windows_list.html', {'board_windows': board_windows})
+    if query:
+        board_windows = board_windows.filter(Q(name__icontains=query)| Q(model__icontains=query))
+    return render(request, 'accounting/board_windows_list.html', {'board_windows': board_windows, 'query':query, 'has_query': bool(query)})
 
 @login_required
 # Список плат T-con
 def tcon(request):
+    query = request.GET.get('q','').strip()
     tcons = Equipment.objects.filter(equip_type=EquipmentType.TCON)
-    return render(request, 'accounting/tcon_list.html', {'tcons': tcons})
+    if query:
+        tcons = tcons.filter(Q(name__icontains=query)| Q(model__icontains=query))
+    return render(request, 'accounting/tcon_list.html', {'tcons': tcons, 'query':query, 'has_query': bool(query) })
 
 @login_required
 # Список кабелей
 def cable(request):
+    query = request.GET.get('q', '').strip()
     cables= Equipment.objects.filter(equip_type=EquipmentType.CABLE)
-    return render(request, 'accounting/cable_list.html', {'cables': cables})
+    if query:
+        cables = cables.filter(Q(name__icontains=query)| Q(model__icontains=query))
+    return render(request, 'accounting/cable_list.html', {'cables': cables,'query':query,'has_query': bool(query)})
 
 @staff_member_required
 # Вывод всех запросов
@@ -178,5 +191,3 @@ def history_user(request):
     ).select_related('equipment')  # ← Оптимизация: сразу подгружаем оборудование
 
     return render(request, "accounting/my_request.html", {"user_requests": user_requests})
-
-
