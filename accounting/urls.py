@@ -15,6 +15,6 @@ urlpatterns = [
     path('requests/<int:req_id>/reject/', views.reject_application, name='reject_application'), # создаёт маршрут (ссылку) для отклонения заявки
     path('login/', views.login_view, name='login'), # Страница входа
     path('logout/', views.logout_view, name='logout'), # Страница выхода
-    path('my_requests/', views.history_user, name='history_user'),
-    
+    path('my_requests/', views.history_user, name='history_user'), # История пользователя
+    path('videowall/', views.videowall, name='videowall_list')
 ]

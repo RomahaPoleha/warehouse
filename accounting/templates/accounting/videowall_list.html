@@ -2,48 +2,47 @@
 {% load static %}
 
 {% block content %}
-    <h1>Платы T-Con для панелей на базе Android и Windows</h1>
+    <h1>Видеостена</h1>
     <br>
-        <!-- ПОИСКОВАЯ СТРОКА -->
+
+    <!-- ПОИСКОВАЯ СТРОКА -->
     <form method="get" class="mb-4">
         <div class="input-group">
             <input
                 type="text"
                 name="q"
                 class="form-control"
-                placeholder="Поиск по наименованию модели..."
+                placeholder="Поиск по наименованию модели и модификации..."
                 value="{{ query }}"
             >
             <button class="btn btn-primary" type="submit">
                 🔍 Найти
             </button>
             {% if query %}
-            <a href="{% url 'tcon_list' %}" class="btn btn-secondary">
+            <a href="{% url 'videowall_list' %}" class="btn btn-secondary">
                 ✕ Сбросить
             </a>
             {% endif %}
         </div>
     </form>
 
-    <!-- Row вынесен ЗА пределы цикла, чтобы карточки встали в сетку -->
+    <!-- Сетка карточек -->
     <div class="row g-3">
-        {% for tcon in tcons %}
+        {% for video in videowall_list %}
         <div class="col-6 col-md-4 col-lg-3 mb-4">
             <div class="card h-100 shadow-sm">
-
                 <!-- БЛОК С КАРТИНКОЙ -->
-                 {% if tcon.image %}
+                {% if video.image %}
                     <div class="overflow-hidden" style="height: 200px;">
-                        <img src="{{ tcon.image }}"
+                        <img src="{{ video.image }}"
                              class="card-img-top zoom-img w-100 h-100"
                              style="object-fit: cover;"
-                             alt="{{ tcon.name }}"
+                             alt="{{ video.name }}"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal"
-                             data-bs-src="{{ tcon.image }}">
+                             data-bs-src="{{ board.image }}">
                     </div>
                 {% else %}
-                    <!-- Заглушка, если картинки нет -->
                     <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
                         <span class="text-muted">Нет фото</span>
                     </div>
@@ -51,20 +50,21 @@
 
                 <!-- ТЕЛО КАРТОЧКИ -->
                 <div class="card-body">
-                    <h5 class="card-title">{{ tcon.name }}</h5>
+                    <h5 class="card-title">{{ video.name }}</h5>
                     <p class="card-text">
-                        <strong>Модель:</strong> {{ tcon.model }}<br>
-                        <strong>Количество:</strong> {{ tcon.quantity }} шт.<br>
-                        <strong class="text-primary">Место хранения:</strong> {{ tcon.cells }}<br>
-                        <strong>Описание:</strong> {{ tcon.description|default:"—" }}
+                        <strong>Модель:</strong> {{ video.model }}<br>
+                        <strong>Модификация:</strong> {{ video.modification }}<br>
+                        <strong>Количество:</strong> {{ video.quantity }} шт.<br>
+                        <strong class="text-primary">Место хранения:</strong> {{ video.cells }}<br>
+                        <strong>Описание:</strong> {{ video.description|default:"—" }}
                     </p>
-                    <a href="{% url 'request_item' tcon.pk %}?next=tcon_list" class="btn btn-success">Запросить</a>
+                    <a href="{% url 'request_item' video.pk %}?next=videowall_list" class="btn btn-success">Запросить</a>
                 </div>
             </div>
         </div>
+
         {% empty %}
 
-        <!-- Информация после ввода в поиске-->
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-body text-center py-5">
@@ -73,7 +73,7 @@
                         <p class="text-muted mb-4">
                             По запросу "<strong>{{ query }}</strong>" ничего не найдено.
                         </p>
-                        <a href="{% url 'tcon_list' %}" class="btn btn-primary">
+                        <a href="{% url 'videowall_list' %}" class="btn btn-primary">
                             Сбросить фильтр и вернутся к списку плат
                         </a>
                     {% else %}
@@ -87,7 +87,7 @@
         {% endfor %}
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО (Должно быть вне цикла, один раз на страницу) -->
+    <!-- МОДАЛЬНОЕ ОКНО -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">

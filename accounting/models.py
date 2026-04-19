@@ -9,7 +9,7 @@ class EquipmentType(models.TextChoices):
     WINDOWS_BOARD = 'windows_board', _('Платы Windows')
     TCON = 'tcon', _('T-Con плата')
     CABLE = 'cable', _('Шлейф')
-
+    VIDEOWALL = 'videowall', _('Видеостена')
 
 class Equipment(models.Model):
     """Основная информация о всех типах оборудования"""

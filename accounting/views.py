@@ -51,6 +51,17 @@ def cable(request):
         cables = cables.filter(Q(name__icontains=query)| Q(model__icontains=query))
     return render(request, 'accounting/cable_list.html', {'cables': cables,'query':query,'has_query': bool(query)})
 
+@login_required
+# Список устройст на базе андроид
+def videowall(request):
+    query = request.GET.get('q','').strip()
+    videowall_list = Equipment.objects.filter(equip_type=EquipmentType.VIDEOWALL)
+    if query:
+        videowall_list = videowall_list.filter(Q(name__icontains=query)| Q(model__icontains=query))
+
+    return render(request, 'accounting/videowall_list.html', {'videowall_list': videowall_list,'query':query, 'has_query': bool(query)})
+
+
 @staff_member_required
 # Вывод всех запросов
 def request_list(request):

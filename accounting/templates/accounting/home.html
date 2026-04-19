@@ -66,6 +66,62 @@ body{background:url(https://bootstraptema.ru/images/bg/bg-3.png)}
 }
 .btn.purple:before{
  background: linear-gradient(to right,#c04848,#480048);
+
+}
+.btn.red{
+ background: linear-gradient(to left, #eb3349 , #f45c43);
+}
+.btn.red:before{
+ background: linear-gradient(to right,#eb3349,#f45c43);
+}
+
+.btn.teal{
+ background: linear-gradient(to left, #00d2ff , #3a7bd5);
+}
+.btn.teal:before{
+ background: linear-gradient(to right,#00d2ff,#3a7bd5);
+}
+
+.btn.pink{
+ background: linear-gradient(to left, #ff758c , #ff7eb3);
+}
+.btn.pink:before{
+ background: linear-gradient(to right,#ff758c,#ff7eb3);
+}
+
+.btn.navy{
+ background: linear-gradient(to left, #1e3c72 , #2a5298);
+}
+.btn.navy:before{
+ background: linear-gradient(to right,#1e3c72,#2a5298);
+}
+
+.btn.gold{
+ background: linear-gradient(to left, #f7971e , #ffd200);
+}
+.btn.gold:before{
+ background: linear-gradient(to right,#f7971e,#ffd200);
+}
+
+.btn.mint{
+ background: linear-gradient(to left, #00b09b , #96c93d);
+}
+.btn.mint:before{
+ background: linear-gradient(to right,#00b09b,#96c93d);
+}
+
+.btn.violet{
+ background: linear-gradient(to left, #8e2de2 , #4a00e0);
+}
+.btn.violet:before{
+ background: linear-gradient(to right,#8e2de2,#4a00e0);
+}
+
+.btn.dark{
+ background: linear-gradient(to left, #232526 , #414345);
+}
+.btn.dark:before{
+ background: linear-gradient(to right,#232526,#414345);
 }
 @media only screen and (max-width: 767px){
  .btn{
@@ -105,7 +161,12 @@ body{background:url(https://bootstraptema.ru/images/bg/bg-3.png)}
         <!-- Шлейфа -->
         <div class="col-12">
             <a href="{% url 'cable_list' %}" class="btn btn-lg purple w-100">
-                <i class="fa fa-link"></i> Шлейфа
+                <i class="fa fa-exchange"></i> Шлейфа
+            </a>
+        </div>
+        <div class="col-12">
+            <a href="{% url 'videowall_list' %}" class="btn btn-lg navy  w-100">
+                <i class="fa fa-link"></i> Видеостена
             </a>
         </div>
 
