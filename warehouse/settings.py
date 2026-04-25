@@ -5,9 +5,11 @@ from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 os.makedirs(BASE_DIR / 'staticfiles', exist_ok=True)
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = ['*']
+# === С ДЕФОЛТАМИ ДЛЯ СБОРКИ ===
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-build-fallback-key-12345')
+DEBUG = config('DEBUG', default=True, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
+DATABASE_URL = config('DATABASE_URL', default='sqlite:///db.sqlite3')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
