@@ -55,7 +55,7 @@ if 'DATABASE_URL' in os.environ:
     DATABASES = {
         'default': dj_database_url.config(
             conn_max_age=600,
-            ssl_require=True
+            ssl_require=False  # ✅ Отключи SSL для БД
         )
     }
 else:
@@ -94,7 +94,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security for production
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = False  # ✅ Отключи для Amvera
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # ✅ Добавь это
+    SESSION_COOKIE_SECURE = False  # ✅ Отключи для теста
+    CSRF_COOKIE_SECURE = False  # ✅ Отключи для теста
 
