@@ -19,7 +19,10 @@ from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.http import HttpResponse
+
 urlpatterns = [
+    path('test-ok/', lambda r: HttpResponse("✅ WORKS!")),
     path('admin/', admin.site.urls),
     path('', include('accounting.urls')),
 ]
