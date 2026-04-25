@@ -94,8 +94,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Security for production
 if not DEBUG:
-    SECURE_SSL_REDIRECT = False  # ✅ Отключи для Amvera
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # ✅ Добавь это
-    SESSION_COOKIE_SECURE = False  # ✅ Отключи для теста
-    CSRF_COOKIE_SECURE = False  # ✅ Отключи для теста
+    # Временно отключаем всё
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SECURE_HSTS_SECONDS = 0
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 
