@@ -1,0 +1,11 @@
+meta:
+  toolchain: python
+  version: "3.11"
+
+build:
+  requirementsPath: requirements.txt
+  useCache: true
+
+run:
+  command: gunicorn warehouse.wsgi:application --bind 0.0.0.0:80
+  containerPort: 80
