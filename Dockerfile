@@ -25,4 +25,4 @@ RUN python manage.py collectstatic --noinput --clear
 EXPOSE 8000
 
 # Запуск
-CMD ["gunicorn", "warehouse.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "warehouse.wsgi:application", "--bind", "0.0.0.0:80"]
