@@ -102,10 +102,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 # Default primary key field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Security for production
-if not DEBUG:
-    SECURE_SSL_REDIRECT = False  # ← Отключаем редирект
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # ← Добавляем это
-    SESSION_COOKIE_SECURE = False  # ← Можно False для теста
-    CSRF_COOKIE_SECURE = False  # ← Можно False для теста
+# Security settings for Amvera (behind proxy)
+SECURE_SSL_REDIRECT = False  # ← Отключаем редирект!
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # ← Добавляем!
+
+# Для теста — отключаем безопасные cookies
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+
+# Остальные настройки (если есть)
+SECURE_HSTS_SECONDS = 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_CONTENT_TYPE_NOSNIFF = False
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
