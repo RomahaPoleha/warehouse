@@ -4,7 +4,7 @@ import dj_database_url
 from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+os.makedirs(BASE_DIR / 'staticfiles', exist_ok=True)
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['*']
@@ -111,5 +111,3 @@ SECURE_HSTS_SECONDS = 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-if not os.path.exists(STATIC_ROOT):
-    os.makedirs(STATIC_ROOT, exist_ok=True)
