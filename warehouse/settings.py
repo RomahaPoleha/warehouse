@@ -116,3 +116,5 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_CONTENT_TYPE_NOSNIFF = False
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
+if not os.path.exists(STATIC_ROOT):
+    os.makedirs(STATIC_ROOT, exist_ok=True)
