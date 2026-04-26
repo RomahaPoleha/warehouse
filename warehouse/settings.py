@@ -65,9 +65,10 @@ if os.environ.get('DATABASE_URL'):
                 ssl_require=False
             )
         }
+
         print(f"✅ Using PostgreSQL: {os.environ['DATABASE_URL'][:50]}...")
     except Exception as e:
-        print(f"❌ DATABASE_URL error: {e}")
+        print(f" DATABASE_URL error: {e}")
         # Fallback to SQLite if PostgreSQL fails
         DATABASES = {
             'default': {
@@ -76,7 +77,7 @@ if os.environ.get('DATABASE_URL'):
             }
         }
 else:
-    print("⚠️ DATABASE_URL not set, using SQLite")
+    print(" DATABASE_URL not set, using SQLite")
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
