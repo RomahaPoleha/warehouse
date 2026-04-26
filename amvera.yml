@@ -1,0 +1,14 @@
+meta:
+  environment: python
+  toolchain:
+    name: pip
+    version: "3.11"
+
+build:
+  requirementsPath: requirements.txt
+  useCache: true
+
+run:
+  command: python manage.py migrate --noinput && python manage.py import_dump && gunicorn warehouse.wsgi:application --bind 0.0.0.0:80
+  containerPort: "80"
+  servicePort: "80"

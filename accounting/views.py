@@ -7,7 +7,17 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.db.models import Q
+from django.http import HttpResponse
+from django.contrib.auth.models import User
 
+def create_superuser(request):
+    # Проверяем, есть ли уже admin
+    if User.objects.filter(username='admin').exists():
+        return HttpResponse('✅ Admin уже существует! Удаляй этот код из views.py')
+
+    # Создаём суперюзера
+    User.objects.create_superuser('admin', 'admin@example.com', 'NewPass2024!')
+    return HttpResponse('✅ Admin создан! Логин: admin | Пароль: NewPass2024! <br> Теперь удаляй этот код из views.py')
 
 # Домашняя страница
 @login_required
