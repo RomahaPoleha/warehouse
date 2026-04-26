@@ -9,7 +9,7 @@ mkdir -p staticfiles
 # Собираем статику
 python manage.py collectstatic --noinput
 
-# === ПРИМЕНЯЕМ МИГРАЦИИ ===
+# === ПРИМЕНЯЕМ МИГРАЦИИ (ОБЯЗАТЕЛЬНО!) ===
 python manage.py migrate --noinput
 
 # === СОЗДАЁМ СУПЕРПОЛЬЗОВАТЕЛЯ ===
