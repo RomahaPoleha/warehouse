@@ -10,7 +10,7 @@ os.makedirs(BASE_DIR / 'staticfiles', exist_ok=True)
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-build-fallback-key-12345')
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
-DATABASE_URL = config('DATABASE_URL', default='sqlite:///db.sqlite3')
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -57,26 +57,17 @@ WSGI_APPLICATION = 'warehouse.wsgi.application'
 
 
 
-if os.environ.get('DATABASE_URL'):
-    try:
-        DATABASES = {
-            'default': dj_database_url.config(
-                conn_max_age=600,
-                ssl_require=False
-            )
-        }
-        print(f"✅ Using PostgreSQL: {os.environ['DATABASE_URL'][:50]}...")
-    except Exception as e:
-        print(f"❌ DATABASE_URL error: {e}")
-        # Fallback to SQLite if PostgreSQL fails
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
-            }
-        }
+if DATABASE_URL:
+    # Принудительно используем PostgreSQL
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=False
+        )
+    }
 else:
-    print("⚠️ DATABASE_URL not set, using SQLite")
+    # Fallback только если переменной совсем нет
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
