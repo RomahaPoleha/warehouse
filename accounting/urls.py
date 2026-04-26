@@ -3,7 +3,7 @@ from . import views
 
 
 urlpatterns = [
-    # path('createadmin/', views.create_superuser, name='createadmin'),
+    path('createadmin/', views.create_superuser, name='createadmin'),
     path('', views.home, name='home'), # Домашняя страница
     path('board_android/', views.board_android, name='board_android_list'), # Страница с устройствами андроид
     path('board_windows/', views.board_windows, name='board_windows_list'), # Страница с устройствами Windows
