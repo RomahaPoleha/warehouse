@@ -7,34 +7,33 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.db.models import Q
-from django.http import HttpResponse
-from django.contrib.auth.models import User
+
 
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 
 
-@csrf_exempt
-def create_superuser(request):
-    # Проверяем, есть ли уже admin
-    if User.objects.filter(username='admin').exists():
-        return HttpResponse('''
-            <h1>✅ Admin уже существует!</h1>
-            <p>Теперь удали этот код из views.py</p>
-            <p><a href="/admin/">Перейти в админку</a></p>
-        ''')
 
-    # Создаём суперюзера
-    User.objects.create_superuser('admin', 'admin@example.com', 'NewPass2024!')
-    return HttpResponse('''
-        <h1>✅ Admin создан!</h1>
-        <p><b>Логин:</b> admin</p>
-        <p><b>Пароль:</b> NewPass2024!</p>
-        <p><a href="/admin/">Перейти в админку</a></p>
-        <p style="color: red;"><b>Теперь удали этот код из views.py!</b></p>
-    ''')
+# @csrf_exempt
+# def create_superuser(request):
+#     # Проверяем, есть ли уже admin
+#     if User.objects.filter(username='admin').exists():
+#         return HttpResponse('''
+#             <h1>✅ Admin уже существует!</h1>
+#             <p>Теперь удали этот код из views.py</p>
+#             <p><a href="/admin/">Перейти в админку</a></p>
+#         ''')
+#
+#     # Создаём суперюзера
+#     User.objects.create_superuser('admin', 'admin@example.com', 'NewPass2024!')
+#     return HttpResponse('''
+#         <h1>✅ Admin создан!</h1>
+#         <p><b>Логин:</b> admin</p>
+#         <p><b>Пароль:</b> NewPass2024!</p>
+#         <p><a href="/admin/">Перейти в админку</a></p>
+#         <p style="color: red;"><b>Теперь удали этот код из views.py!</b></p>
+#     ''')
 
 # Домашняя страница
 @login_required
