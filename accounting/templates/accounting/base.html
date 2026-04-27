@@ -86,30 +86,27 @@
 
         <!-- ЛЕВОЕ МЕНЮ (SIDEBAR) -->
         <div id="sidebar-wrapper">
-            <div class="list-group list-group-flush my-3">
-                <!-- Заголовок меню -->
-                <a href="/" class="list-group-item list-group-item-action bg-transparent text-white fs-3 fw-bold mb-4">
-                    🚀 Навигация
-                </a>
+            <div class="list-group list-group-flush my-4">
+                <h2 class="ps-3" style="color: white">Навигация🧭</h2>
 
                 <!-- Пункты меню -->
                 <!-- Добавлен класс active, если текущий раздел активен (пример логики) -->
 
                 <a href="/" class="list-group-item list-group-item-action fs-4 ">🏠 Главная</a>
                  {% if user.is_authenticated %}
-                 <a href="{% url 'history_user' %}" class="list-group-item list-group-item-action fs-4">Мои заявки</a>
+                 <a href="{% url 'history_user' %}" class="list-group-item list-group-item-action fs-4">📃 Мои заявки</a>
                 {% endif %}
                 {% if user.is_staff %}
-                <a href="{% url 'request_list' %}" class="list-group-item list-group-item-action fs-4">📥 Запросы</a>
+                <a href="{% url 'request_list' %}" class="list-group-item list-group-item-action fs-4">📩 Запросы</a>
 
-                <a href="{% url 'history_list' %}" class="list-group-item list-group-item-action fs-4"> История выдачи</a>
+                <a href="{% url 'history_list' %}" class="list-group-item list-group-item-action fs-4">📂 История выдачи</a>
 
-                <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action fs-4"> Администратор</a>
+                <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action fs-4"> 👮🏼‍♂️ Админка</a>
                 {% endif %}
                 {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="list-group-item list-group-item-action fs-4 ">Выход</a>
+                <a href="{% url 'logout' %}" class="list-group-item list-group-item-action fs-4 ">👋 Выход</a>
                 {% else %}
-                <a href="{% url 'login' %}" class="list-group-item list-group-item-action fs-4 ">Вход</a>
+                <a href="{% url 'login' %}" class="list-group-item list-group-item-action fs-4 ">🔑 Вход</a>
                 {% endif %}
 
                 <!-- Блок для динамических ссылок из Django -->
