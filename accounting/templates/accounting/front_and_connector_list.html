@@ -1,0 +1,103 @@
+{% extends "accounting/base.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>Фронтальная рамка панели и разъём подключения OPS</h1>
+    <br>
+
+    <!-- ПОИСКОВАЯ СТРОКА -->
+    <form method="get" class="mb-4">
+        <div class="input-group">
+            <input
+                type="text"
+                name="q"
+                class="form-control"
+                placeholder="Поиск по наименованию модели и модификации..."
+                value="{{ query }}"
+            >
+            <button class="btn btn-primary" type="submit">
+                🔍 Найти
+            </button>
+            {% if query %}
+            <a href="{% url 'front_and_connector_list' %}" class="btn btn-secondary">
+                ✕ Сбросить
+            </a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Сетка карточек -->
+    <div class="row g-3">
+        {% for front in front_and_connector %}
+        <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <!-- БЛОК С КАРТИНКОЙ -->
+                {% if front.image %}
+                    <div class="overflow-hidden" style="height: 200px;">
+                        <img src="{{ front.image }}"
+                             class="card-img-top zoom-img w-100 h-100"
+                             style="object-fit: cover;"
+                             alt="{{ front.name }}"
+                             data-bs-toggle="modal"
+                             data-bs-target="#imageModal"
+                             data-bs-src="{{ front.image }}">
+                    </div>
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                        <span class="text-muted">Нет фото</span>
+                    </div>
+                {% endif %}
+
+                <!-- ТЕЛО КАРТОЧКИ -->
+                <div class="card-body">
+                    <h5 class="card-title">{{ front.name }}</h5>
+                    <p class="card-text">
+                        <strong>Модель:</strong> {{ front.model }}<br>
+                        <strong>Количество:</strong> {{ front.quantity }} шт.<br>
+                        <strong class="text-primary">Место хранения:</strong> {{ front.cells }}<br>
+                        <strong>Описание:</strong> {{ front.description|default:"—" }}
+                    </p>
+                    <a href="{% url 'request_item' front.pk %}?next=front_and_connector_list" class="btn btn-success">Запросить</a>
+                </div>
+            </div>
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body text-center py-5">
+                    {% if has_query %}
+                        <h4 class="mb-3">Ничего не найдено</h4>
+                        <p class="text-muted mb-4">
+                            По запросу "<strong>{{ query }}</strong>" ничего не найдено.
+                        </p>
+                        <a href="{% url 'front_and_connector_list' %}" class="btn btn-primary">
+                            Сбросить фильтр и вернутся к списку плат
+                        </a>
+                    {% else %}
+                    <div class="col-12">
+                         <div class="alert alert-info">Тут пока нечего нет.</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Просмотр изображения</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-0">
+                    <img src="" alt="Full size image" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

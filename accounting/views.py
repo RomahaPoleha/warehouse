@@ -38,6 +38,15 @@ def home(request):
     return render(request, 'accounting/home.html')
 
 @login_required
+# Список Фронтальных плат и плат подключения OPS
+def front_and_connector(request):
+    query = request.GET.get('q', '').strip()
+    front_and_connector = Equipment.objects.filter(equip_type=EquipmentType.FRONT_CONNECTOR)
+    if query:
+        front_and_connector =front_and_connector.filter(Q(name__icontains=query)| Q(model__icontains=query)|Q(modification__icontains=query))
+    return render(request, 'accounting/front_and_connector_list.html', {'front_and_connector': front_and_connector,'query':query, 'has_query': bool(query)})
+
+@login_required
 # Список устройст на базе андроид
 def board_android(request):
     query = request.GET.get('q','').strip()

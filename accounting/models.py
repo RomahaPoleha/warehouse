@@ -10,6 +10,7 @@ class EquipmentType(models.TextChoices):
     TCON = 'tcon', _('T-Con плата')
     CABLE = 'cable', _('Шлейф')
     VIDEOWALL = 'videowall', _('Видеостена')
+    FRONT_CONNECTOR = 'front_and_connector', _('Фронтальная панель и разъем для ОПС')
 
 class Equipment(models.Model):
     """Основная информация о всех типах оборудования"""
