@@ -38,6 +38,15 @@ def home(request):
     return render(request, 'accounting/home.html')
 
 @login_required
+# Список ИК-Рамок
+def ir_frames(request):
+    query = request.GET.get('q','').strip()
+    ir_frames = Equipment.objects.filter(equip_type=EquipmentType.IR_FRAMES)
+    if query:
+        ir_frames = ir_frames.filter(Q(name__icontains=query)| Q(model__icontains=query))
+    return render(request, 'accounting/ir_frames_list.html', {'ir_frames': ir_frames, 'query':query,'has_query': bool(query)})
+
+@login_required
 # Список Фронтальных плат и плат подключения OPS
 def front_and_connector(request):
     query = request.GET.get('q', '').strip()

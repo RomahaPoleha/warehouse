@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     # path('createadmin/', views.create_superuser, name='createadmin'),
+    path('ir_frames_list.html/',views.ir_frames, name='ir_frames_list'),
     path('front_and_connector_list', views.front_and_connector, name='front_and_connector_list'),
     path('', views.home, name='home'), # Домашняя страница
     path('board_android/', views.board_android, name='board_android_list'), # Страница с устройствами андроид

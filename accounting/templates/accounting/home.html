@@ -1,181 +1,103 @@
 {% extends "accounting/base.html" %}
 
 {% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
 
+            <!-- Заголовок раздела (опционально) -->
+            <h2 class="h4 text-secondary mb-4 border-bottom pb-2">
+                Каталог оборудования
+            </h2>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+            <!-- Сетка кнопок -->
+            <div class="list-group shadow-sm rounded-3 overflow-hidden">
 
-<br><br><br>
+                <a href="{% url 'board_android_list' %}"
+                   class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                    <i class="fa fa-plug fa-fw text-primary me-3" aria-hidden="true"></i>
+                    <div>
+                        <div class="fw-semibold">Платы питания / материнские платы</div>
+                        <small class="text-muted">для устройств на Android</small>
+                    </div>
+                    <i class="fa fa-chevron-right ms-auto text-muted small"></i>
+                </a>
 
-<style>
-body{background:url(https://bootstraptema.ru/images/bg/bg-3.png)}
-.btn{
- position: relative;
- color:#fff;
- border-radius:30px;
- text-transform: uppercase;
- transform: scale(1.1,1.1);
- transition:all 0.3s ease-out 0s;
-}
-.btn:hover{
- transform: scale(1,1);
- color:#fff;
-}
-.btn i{
- margin-right:15px;
- color:#fff;
-}
-.btn:before {
- content: "";
- position: absolute;
- bottom: -8px;
- left:0px;
- width:100%;
- height: 10px;
- filter: blur(20px);
- border-radius: 30px;
- display: inline-block;
- z-index: -1;
- transition: all 0.3s ease-out 0s;
-}
-.btn:hover:before{
- bottom:0;
- filter: blur(10px);
-}
-.btn.blue{
- background: linear-gradient(to left, #7474bf , #348ac7);
-}
-.btn.blue:before{
- background: linear-gradient(to right,#7474bf,#348ac7);
-}
-.btn.green{
- background: linear-gradient(to left, #414d0b , #727a17);
-}
-.btn.green:before{
- background: linear-gradient(to right,#414d0b,#727a17);
-}
+                <a href="{% url 'board_windows_list' %}"
+                   class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                    <i class="fa fa-desktop fa-fw text-primary me-3" aria-hidden="true"></i>
+                    <div>
+                        <div class="fw-semibold">Платы питания / материнские платы</div>
+                        <small class="text-muted">для панелей на базе Windows</small>
+                    </div>
+                    <i class="fa fa-chevron-right ms-auto text-muted small"></i>
+                </a>
 
-.btn.orange{
- background: linear-gradient(to left, #fe8c00 , #f83600);
-}
-.btn.orange:before{
- background: linear-gradient(to right,#fe8c00,#f83600);
-}
-.btn.purple{
- background: linear-gradient(to left, #c04848 , #480048);
-}
-.btn.purple:before{
- background: linear-gradient(to right,#c04848,#480048);
+                <a href="{% url 'tcon_list' %}"
+                   class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                    <i class="fa fa-microchip fa-fw text-primary me-3" aria-hidden="true"></i>
+                    <div>
+                        <div class="fw-semibold">TCON-контроллеры</div>
+                        <small class="text-muted">для панелей Android / Windows</small>
+                    </div>
+                    <i class="fa fa-chevron-right ms-auto text-muted small"></i>
+                </a>
 
-}
-.btn.red{
- background: linear-gradient(to left, #eb3349 , #f45c43);
-}
-.btn.red:before{
- background: linear-gradient(to right,#eb3349,#f45c43);
-}
+                <a href="{% url 'cable_list' %}"
+                   class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                    <i class="fa fa-exchange fa-fw text-primary me-3" aria-hidden="true"></i>
+                    <div>
+                        <div class="fw-semibold">Шлейфы и кабельная продукция</div>
+                    </div>
+                    <i class="fa fa-chevron-right ms-auto text-muted small"></i>
+                </a>
 
-.btn.teal{
- background: linear-gradient(to left, #00d2ff , #3a7bd5);
-}
-.btn.teal:before{
- background: linear-gradient(to right,#00d2ff,#3a7bd5);
-}
+                <a href="{% url 'videowall_list' %}"
+                   class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                    <i class="fa fa-link fa-fw text-primary me-3" aria-hidden="true"></i>
+                    <div>
+                        <div class="fw-semibold">Видеостены</div>
+                        <small class="text-muted">контроллеры и комплектующие</small>
+                    </div>
+                    <i class="fa fa-chevron-right ms-auto text-muted small"></i>
+                </a>
 
-.btn.pink{
- background: linear-gradient(to left, #ff758c , #ff7eb3);
-}
-.btn.pink:before{
- background: linear-gradient(to right,#ff758c,#ff7eb3);
-}
+                <a href="{% url 'front_and_connector_list' %}"
+                   class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                    <i class="fa fa-window-restore fa-fw text-primary me-3" aria-hidden="true"></i>
+                    <div>
+                        <div class="fw-semibold">Фронтальные платы и разъёмы</div>
+                        <small class="text-muted">для подключения OPS-модулей</small>
+                    </div>
+                    <i class="fa fa-chevron-right ms-auto text-muted small"></i>
+                </a>
 
-.btn.navy{
- background: linear-gradient(to left, #1e3c72 , #2a5298);
-}
-.btn.navy:before{
- background: linear-gradient(to right,#1e3c72,#2a5298);
-}
+                <a href="{% url 'front_and_connector_list' %}"
+                   class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                    <i class="fa fa-arrows-alt fa-fw text-primary me-3" aria-hidden="true"></i>
+                    <div>
+                        <div class="fw-semibold">ИК-рамки</div>
+                        <small class="text-muted">сенсорные обрамления</small>
+                    </div>
+                    <i class="fa fa-chevron-right ms-auto text-muted small"></i>
+                </a>
 
-.btn.gold{
- background: linear-gradient(to left, #f7971e , #ffd200);
-}
-.btn.gold:before{
- background: linear-gradient(to right,#f7971e,#ffd200);
-}
+            </div>
+            <!-- /Сетка -->
 
-.btn.mint{
- background: linear-gradient(to left, #00b09b , #96c93d);
-}
-.btn.mint:before{
- background: linear-gradient(to right,#00b09b,#96c93d);
-}
-
-.btn.violet{
- background: linear-gradient(to left, #8e2de2 , #4a00e0);
-}
-.btn.violet:before{
- background: linear-gradient(to right,#8e2de2,#4a00e0);
-}
-
-.btn.dark{
- background: linear-gradient(to left, #232526 , #414345);
-}
-.btn.dark:before{
- background: linear-gradient(to right,#232526,#414345);
-}
-@media only screen and (max-width: 767px){
- .btn{
- margin-bottom:15px;
- }
-}
-/* отступ */
-.pad-15{
- padding: 15px 0;
-}
-</style>
-
-<div class="container px-2">
-    <div class="row g-3">
-
-        <!-- Платы питания -->
-        <div class="col-10 offset-md-1">
-            <a href="{% url 'board_android_list' %}" class="btn btn-lg blue w-100">
-                <i class="fa fa-plug"></i> Платы питания и материнские платы для Андроида
-            </a>
         </div>
-
-        <!-- Панели Windows -->
-        <div class="col-10 offset-md-1">
-            <a href="{% url 'board_windows_list' %}" class="btn btn-lg green w-100">
-                <i class="fa fa-desktop"></i> Платы питания и материнские платы панелей на базе Windows
-            </a>
-        </div>
-
-        <!-- Tcon-ы -->
-        <div class="col-10 offset-md-1">
-            <a href="{% url 'tcon_list' %}" class="btn btn-lg orange w-100">
-                <i class="fa fa-microchip"></i> Tcon-ы для панелей Android/Windows
-            </a>
-        </div>
-
-        <!-- Шлейфа -->
-        <div class="col-10 offset-md-1">
-            <a href="{% url 'cable_list' %}" class="btn btn-lg purple w-100">
-                <i class="fa fa-exchange"></i> Шлейфа
-            </a>
-        </div>
-        <div class="col-10 offset-md-1">
-            <a href="{% url 'videowall_list' %}" class="btn btn-lg navy  w-100">
-                <i class="fa fa-link"></i> Видеостена
-            </a>
-        </div>
-        <div class="col-10 offset-md-1">
-            <a href="{% url 'front_and_connector_list' %}" class="btn btn-lg mint  w-100">
-                <i class="fa fa-window-restore"></i> Фронтальные платы/разъёмы для подключения OPS
-            </a>
-        </div>
-
     </div>
 </div>
-{% endblock %}
 
+<!-- Минимальные стили (опционально) -->
+<style>
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+        border-left: 3px solid #0d6efd;
+        transition: all 0.2s ease;
+    }
+    .list-group-item i.fa {
+        font-size: 1.25rem;
+    }
+</style>
+{% endblock %}

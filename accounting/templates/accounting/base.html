@@ -1,176 +1,331 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Учет{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Система учёта оборудования{% endblock %}">
+    <title>{% block title %}Учёт оборудования{% endblock %} • Warehouse</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5.3 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
     {% block extra_css %}
     <style>
-        /* --- Стили для левого сайдбара --- */
-        #wrapper {
+        :root {
+            --sidebar-width: 260px;
+            --sidebar-bg: #1e293b;
+            --sidebar-color: #cbd5e1;
+            --sidebar-hover: #334155;
+            --sidebar-active: #0f172a;
+            --sidebar-border: #334155;
+            --header-height: 56px;
+        }
+
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #0d6efd;
+            color: white;
+            padding: 8px 16px;
+            z-index: 10000;
+            transition: top 0.2s;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+
+        body {
+            min-height: 100vh;
             display: flex;
-            width: 100%;
-            align-items: stretch;
+            flex-direction: column;
+            background: #f8fafc;
         }
 
-        #sidebar-wrapper {
-            min-width: 250px;
-            max-width: 250px;
-            min-height: 100vh; /* На всю высоту экрана */
-            background: #212529; /* Темный фон как у navbar-dark */
-            transition: margin 0.25s ease-out;
+        /* Sidebar */
+        #sidebar {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            color: var(--sidebar-color);
+            transition: transform 0.3s ease;
+            z-index: 1030;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid var(--sidebar-border);
         }
 
-        /* Сайдбар на мобильных (скрыт за левый край) */
+        #sidebar .brand {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--sidebar-border);
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        #sidebar .nav-link {
+            color: var(--sidebar-color);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        #sidebar .nav-link:hover {
+            color: #fff;
+            background: var(--sidebar-hover);
+        }
+
+        #sidebar .nav-link.active {
+            color: #fff;
+            background: var(--sidebar-active);
+            border-left-color: #3b82f6;
+            font-weight: 500;
+        }
+
+        #sidebar .nav-link i {
+            width: 1.25rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* Mobile: sidebar hidden */
         @media (max-width: 768px) {
-            #sidebar-wrapper {
-                margin-left: -250px;
+            #sidebar {
+                transform: translateX(-100%);
             }
-            #wrapper.toggled #sidebar-wrapper {
+            #sidebar.show {
+                transform: translateX(0);
+            }
+            #sidebar-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.4);
+                z-index: 1025;
+            }
+            #sidebar-overlay.show {
+                display: block;
+            }
+        }
+
+        /* Main content */
+        #main {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: calc(100vh - var(--header-height));
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (max-width: 768px) {
+            #main {
                 margin-left: 0;
             }
         }
 
-        /* Ссылки меню */
-        #sidebar-wrapper .list-group-item {
-            background-color: transparent;
-            color: rgba(255,255,255,.75);
-            border: none;
-            padding: 1rem 1.5rem;
-        }
-        #sidebar-wrapper .list-group-item:hover {
-            color: #fff;
-            background-color: rgba(255,255,255,.1);
-        }
-        #sidebar-wrapper .list-group-item.active {
-            font-weight: bold;
-            color: #fff;
-            background-color: rgba(255,255,255,.2);
+        /* Topbar */
+        .topbar {
+            height: var(--header-height);
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1020;
         }
 
-        /* --- Ваши стили для картинок --- */
-        .zoom-img {
-            transition: transform 0.3s ease;
-            cursor: pointer;
+        .topbar .btn-toggle {
+            font-size: 1.25rem;
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
-        .zoom-img:hover {
-            transform: scale(1.05);
+
+        /* Footer */
+        .site-footer {
+            background: #fff;
+            border-top: 1px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: auto;
         }
-        .modal-body img {
-            max-width: 100%;
-            height: auto;
+
+        /* Content area */
+        .content-area {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        /* Utilities */
+        .text-truncate-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
     </style>
     {% endblock %}
 </head>
 <body>
 
-    <!-- Сообщения (Alerts) -->
-    {% if messages %}
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <!-- Accessibility: skip to content -->
+    <a href="#main-content" class="skip-link">Перейти к содержимому</a>
+
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" tabindex="-1"></div>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" aria-label="Основная навигация">
+        <div class="brand d-flex align-items-center gap-2">
+            <i class="bi bi-box-seam"></i>
+            <span>Warehouse</span>
         </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
-    <!-- Основная обертка -->
-    <div id="wrapper">
+        <nav class="nav flex-column py-2">
+            <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                <i class="bi bi-house-door"></i> Главная
+            </a>
 
-        <!-- ЛЕВОЕ МЕНЮ (SIDEBAR) -->
-        <div id="sidebar-wrapper">
-            <div class="list-group list-group-flush my-4">
-                <h2 class="ps-3" style="color: white">Навигация🧭</h2>
+            {% if user.is_authenticated %}
+                <a href="{% url 'history_user' %}" class="nav-link {% if 'history_user' in request.resolver_match.view_name %}active{% endif %}">
+                    <i class="bi bi-journal-text"></i> Мои заявки
+                </a>
+            {% endif %}
 
-                <!-- Пункты меню -->
-                <!-- Добавлен класс active, если текущий раздел активен (пример логики) -->
+            {% if user.is_staff %}
+                <a href="{% url 'request_list' %}" class="nav-link {% if 'request_list' in request.resolver_match.view_name %}active{% endif %}">
+                    <i class="bi bi-inbox"></i> Запросы
+                </a>
+                <a href="{% url 'history_list' %}" class="nav-link {% if 'history_list' in request.resolver_match.view_name %}active{% endif %}">
+                    <i class="bi bi-clock-history"></i> История выдачи
+                </a>
+                <a href="{% url 'admin:index' %}" class="nav-link text-warning">
+                    <i class="bi bi-shield-lock"></i> Админ-панель
+                </a>
+            {% endif %}
 
-                <a href="/" class="list-group-item list-group-item-action fs-4 ">🏠 Главная</a>
-                 {% if user.is_authenticated %}
-                 <a href="{% url 'history_user' %}" class="list-group-item list-group-item-action fs-4">📃 Мои заявки</a>
-                {% endif %}
-                {% if user.is_staff %}
-                <a href="{% url 'request_list' %}" class="list-group-item list-group-item-action fs-4">📩 Запросы</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}" class="nav-link mt-auto border-top mt-3 pt-3">
+                    <i class="bi bi-box-arrow-right"></i> Выйти
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-link mt-auto border-top mt-3 pt-3">
+                    <i class="bi bi-box-arrow-in-right"></i> Войти
+                </a>
+            {% endif %}
 
-                <a href="{% url 'history_list' %}" class="list-group-item list-group-item-action fs-4">📂 История выдачи</a>
+            {% block sidebar_links %}{% endblock %}
+        </nav>
+    </aside>
 
-                <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action fs-4"> 👮🏼‍♂️ Админка</a>
-                {% endif %}
-                {% if user.is_authenticated %}
-                <a href="{% url 'logout' %}" class="list-group-item list-group-item-action fs-4 ">👋 Выход</a>
-                {% else %}
-                <a href="{% url 'login' %}" class="list-group-item list-group-item-action fs-4 ">🔑 Вход</a>
-                {% endif %}
-
-                <!-- Блок для динамических ссылок из Django -->
-                {% block sidebar_links %}
-                {% endblock %}
+    <!-- MAIN CONTENT -->
+    <div id="main">
+        <!-- Topbar -->
+        <header class="topbar">
+            <button class="btn btn-toggle d-md-none" id="sidebarToggle" aria-label="Меню" aria-expanded="false" aria-controls="sidebar">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="ms-3 fw-semibold text-truncate">
+                {% block page_title %}Панель управления{% endblock %}
             </div>
-        </div>
-        <!-- /#sidebar-wrapper -->
+            {% if user.is_authenticated %}
+                <div class="ms-auto d-flex align-items-center gap-2">
+                    <small class="text-muted d-none d-sm-block">{{ user.username }}</small>
+                    <i class="bi bi-person-circle fs-5 text-secondary"></i>
+                </div>
+            {% endif %}
+        </header>
 
-        <!-- ПРАВЫЙ КОНТЕНТ (PAGE CONTENT) -->
-        <div id="page-content-wrapper" class="w-100">
-
-            <!-- Верхняя панель для мобильных (кнопка меню) -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom px-3 d-md-none">
-                <button class="btn btn-dark" id="menu-toggle">☰ Меню</button>
-                <span class="navbar-brand ms-3">{% block page_title %}Панель{% endblock %}</span>
-            </nav>
-
-            <!-- Основной контент страницы -->
-            <div class="container-fluid px-4 py-4">
-                {% block content %}
-                {% endblock %}
+        <!-- Messages -->
+        {% if messages %}
+        <div class="container-fluid px-4 pt-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-0" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
             </div>
-
-            <footer class="mt-auto py-0 bg-light border-top text-center text-muted small">
-                &copy; 2026
-            </footer>
+            {% endfor %}
         </div>
-        <!-- /#page-content-wrapper -->
+        {% endif %}
 
+        <!-- Page Content -->
+        <main id="main-content" class="content-area">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="site-footer text-center">
+            &copy; {% now "Y" %} Warehouse. Все права защищены.
+        </footer>
     </div>
-    <!-- /#wrapper -->
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Скрипт для работы переключения меню -->
-    <script>
-        // Логика открытия/закрытия меню на мобильных
-        document.addEventListener('DOMContentLoaded', function () {
-            const toggleButton = document.getElementById('menu-toggle');
-            const wrapper = document.getElementById('wrapper');
-
-            if (toggleButton) {
-                toggleButton.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    wrapper.classList.toggle('toggled');
-                });
-            }
-
-            // Ваш скрипт для модального окна картинок
-            var imageModal = document.getElementById('imageModal');
-            if (imageModal) {
-                imageModal.addEventListener('show.bs.modal', function (event) {
-                    var button = event.relatedTarget;
-                    var src = button.getAttribute('data-bs-src');
-                    var modalImg = imageModal.querySelector('.modal-body img');
-                    if(modalImg) modalImg.src = src;
-                });
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     {% block extra_js %}
     {% endblock %}
+
+    <!-- App JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const toggleBtn = document.getElementById('sidebarToggle');
+
+            function closeSidebar() {
+                sidebar?.classList.remove('show');
+                overlay?.classList.remove('show');
+                toggleBtn?.setAttribute('aria-expanded', 'false');
+            }
+
+            function openSidebar() {
+                sidebar?.classList.add('show');
+                overlay?.classList.add('show');
+                toggleBtn?.setAttribute('aria-expanded', 'true');
+            }
+
+            // Toggle on mobile
+            toggleBtn?.addEventListener('click', () => {
+                if (sidebar?.classList.contains('show')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            // Close on overlay click
+            overlay?.addEventListener('click', closeSidebar);
+
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && sidebar?.classList.contains('show')) {
+                    closeSidebar();
+                }
+            });
+
+            // Auto-close sidebar on link click (mobile)
+            sidebar?.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 768) {
+                        closeSidebar();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

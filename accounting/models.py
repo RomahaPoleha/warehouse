@@ -11,6 +11,7 @@ class EquipmentType(models.TextChoices):
     CABLE = 'cable', _('Шлейф')
     VIDEOWALL = 'videowall', _('Видеостена')
     FRONT_CONNECTOR = 'front_and_connector', _('Фронтальная панель и разъем для ОПС')
+    IR_FRAMES = 'IR_frames', _("ИК - Рамка")
 
 class Equipment(models.Model):
     """Основная информация о всех типах оборудования"""
