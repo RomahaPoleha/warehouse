@@ -1,67 +1,110 @@
 {% extends "accounting/base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>📋 Все заявки</h2>
+<h2 class="h5 text-secondary mb-3 pb-2 border-bottom">
+    Все заявки
+</h2>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Оборудование</th>
-                <th>Количество</th>
-                <th>Кем запрошено</th>
-                <th>Дата создания запроса</th>
-                <th>Статус</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for req in req_pending %}
-            <tr>
-                 <td>{{ req.equipment.name }} <br>
-                        <small class="text-muted">Модель : {{ req.equipment.model }}</small><br>
-                     {% if req.equipment.modification %}
-                        <small class="text-muted">Модификация : {{ req.equipment.modification }}</small><br>
-                        {% elif req.equipment.length_cm %}
-                        <small class="text-muted">Длина : {{ req.equipment.length_cm }} см</small>
-                        {% endif %}
-                    </td>
-
-                    <td>{{ req.quantity_requested }} шт.</td>
-                    <td>{{ req.requesting_user.username }}</td>
-                    <td>{{ req.created_at|date:"d.m.Y H:i" }}</td>
-                    <td>
-                        {% if req.status == 'pending' %}
-                            <span class="badge bg-warning">Ожидает</span>
-                        {% elif req.status == 'confirmed' %}
-                            <span class="badge bg-success">Выдано</span>
-                        {% else %}
-                            <span class="badge bg-danger">Отклонено</span>
-                        {% endif %}
-                    </td>
-                <td>
-    {% if req.status == 'pending' %}
-        <form action="{% url 'confirm_request' req.id %}" method="POST" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success btn-sm">Выдать</button>
-        </form>
-        <form action="{% url 'reject_application' req.id %}" method="POST" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger btn-sm"
-                    onclick="return confirm('Отклонить заявку?')">Отклонить</button>
-        </form>
-    {% else %}
-        <span class="text-muted">—</span>
-    {% endif %}
-</td>
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0 warehouse-table">
+            <thead class="table-light">
+                <tr>
+                    <th>Оборудование</th>
+                    <th style="width: 90px;" class="text-center">Кол-во</th>
+                    <th style="width: 140px;">Запросил</th>
+                    <th style="width: 140px;">Дата</th>
+                    <th style="width: 110px;" class="text-center">Статус</th>
+                    <th style="width: 180px;" class="text-end">Действия</th>
                 </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">Выданных заявок нет</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for req in req_pending %}
+                <tr class="warehouse-row">
+                    <td>
+                        <div class="fw-semibold text-dark">{{ req.equipment.name }}</div>
+                        <div class="small inventory-code text-muted mt-1">
+                            Модель: {{ req.equipment.model|default:"—" }}
+                            {% if req.equipment.modification %} | {{ req.equipment.modification }}{% endif %}
+                            {% if req.equipment.length_cm %} | {{ req.equipment.length_cm }} см{% endif %}
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span class="inventory-qty">{{ req.quantity_requested }}</span>
+                    </td>
+                    <td>
+                        <span class="text-dark small">{{ req.requesting_user.username }}</span>
+                    </td>
+                    <td>
+                        <span class="text-muted small">{{ req.created_at|date:"d.m.Y H:i" }}</span>
+                    </td>
+                    <td class="text-center">
+                        {% if req.status == 'pending' %}
+                            <span class="badge bg-warning text-dark px-2 py-1">Ожидает</span>
+                        {% elif req.status == 'confirmed' %}
+                            <span class="badge bg-success px-2 py-1">Выдано</span>
+                        {% elif req.status == 'rejected' %}
+                            <span class="badge bg-danger px-2 py-1">Отклонено</span>
+                        {% else %}
+                            <span class="badge bg-secondary px-2 py-1">{{ req.status|default:"Неизвестно" }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        {% if req.status == 'pending' %}
+                            <form action="{% url 'confirm_request' req.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-success me-1" title="Подтвердить выдачу">
+                                    <i class="bi bi-check-lg"></i> Выдать
+                                </button>
+                            </form>
+                            <form action="{% url 'reject_application' req.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Отклонить заявку?')" title="Отклонить заявку">
+                                    <i class="bi bi-x-lg"></i> Отклонить
+                                </button>
+                            </form>
+                        {% else %}
+                            <span class="text-muted small">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
 
-    <a href="{% url 'home' %}" class="btn btn-secondary">← На главную</a>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-5">
+                        <i class="bi bi-inbox text-muted mb-3" style="font-size: 2.5rem;"></i>
+                        <h6 class="mb-2">Заявок нет</h6>
+                        <p class="text-muted mb-3 small">В данный момент нет заявок для обработки.</p>
+                        <a href="{% url 'home' %}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-house me-1"></i>На главную
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .warehouse-table th {
+        font-weight: 600; font-size: 0.8125rem; text-transform: uppercase;
+        letter-spacing: 0.4px; color: #6c757d; border-bottom: 2px solid #dee2e6;
+        padding: 0.75rem 1rem; background: #f8f9fa;
+    }
+    .warehouse-table td { padding: 0.6rem 1rem; border-bottom: 1px solid #e9ecef; vertical-align: middle; }
+    .warehouse-row:hover { background-color: #f1f5f9; }
+
+    .inventory-code { font-family: var(--bs-font-monospace); letter-spacing: 0.2px; font-size: 0.85rem; }
+    .inventory-qty { font-family: var(--bs-font-monospace); font-size: 1.05rem; font-weight: 600; color: #343a40; }
+
+    .table-responsive { border-radius: 6px; }
+    @media (max-width: 768px) {
+        .warehouse-table td, .warehouse-table th { padding: 0.5rem 0.75rem; }
+    }
+</style>
 {% endblock %}

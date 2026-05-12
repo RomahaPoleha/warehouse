@@ -54,7 +54,7 @@
                     <td>
                         <div class="fw-semibold text-dark">{{ windows.name }}</div>
                         {% if windows.model %}
-                        <div class="small inventory-code text-muted mt-1">АРТ: {{ windows.model }}</div>
+                        <div class="small inventory-code text-muted mt-1">Модель: {{ windows.model }}</div>
                         {% endif %}
                         {% if windows.description %}
                         <div class="small text-muted text-truncate mt-1" style="max-width: 400px;" title="{{ windows.description }}">
@@ -65,7 +65,7 @@
                     <td class="text-center">
                         <span class="small fw-medium">{{ windows.cpu|default:"—" }}</span>
                     </td>
-                    <td class="text-end">
+                    <td class="text-center">
                         <span class="inventory-qty {% if windows.quantity < 5 %}low-stock{% endif %}">
                             {{ windows.quantity }}
                         </span>

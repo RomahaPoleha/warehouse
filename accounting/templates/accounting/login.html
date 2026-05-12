@@ -1,36 +1,153 @@
 {% extends "accounting/base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card border-0 shadow-lg rounded-4">
-                <div class="card-header bg-primary text-white py-3 text-center">
-                    <h3 class="m-0 fw-bold">🔐 Вход</h3>
-                </div>
-                <div class="card-body p-4">
-                    <form method="POST">
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Имя пользователя</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Пароль</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                        
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">Войти</button>
-                        </div>
-                    </form>
-                    
-                    <hr class="my-4">
+<div class="auth-wrapper">
+    <div class="auth-card fade-in-up">
+        <div class="auth-header">
+            <div class="auth-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <h2 class="auth-title">Вход в систему</h2>
+            <p class="auth-subtitle">Система учёта оборудования Warehouse</p>
+        </div>
+
+        <!-- Ошибки авторизации -->
+        {% if form.errors %}
+        <div class="alert alert-danger d-flex align-items-center py-2 px-3 mb-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <span class="small">Неверное имя пользователя или пароль</span>
+        </div>
+        {% endif %}
+
+        <!-- Системные сообщения -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} d-flex align-items-center py-2 px-3 mb-3" role="alert">
+            <i class="bi {% if message.tags == 'success' %}bi-check-circle-fill{% else %}bi-info-circle-fill{% endif %} me-2"></i>
+            <span class="small">{{ message }}</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Форма -->
+        <form method="POST" class="auth-form" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Имя пользователя</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input type="text" class="form-control" id="username" name="username"
+                           placeholder="Введите логин" required autofocus autocomplete="username">
                 </div>
             </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Пароль</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" class="form-control" id="password" name="password"
+                           placeholder="Введите пароль" required autocomplete="current-password">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-medium">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Войти
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <small class="text-muted">© {% now "Y" %} Warehouse. Все права защищены.</small>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    /* Фон и центрирование */
+    .auth-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - var(--header-height, 56px) - 4rem);
+        padding: 2rem 1rem;
+        background: radial-gradient(circle at 20% 30%, #f0f4ff 0%, #f8fafc 40%, #e2e8f0 100%);
+    }
+
+    /* Карточка */
+    .auth-card {
+        width: 100%;
+        max-width: 400px;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Шапка */
+    .auth-header { text-align: center; margin-bottom: 1.5rem; }
+
+    .auth-icon {
+        width: 56px; height: 56px;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        border-radius: 14px;
+        display: inline-flex; align-items: center; justify-content: center;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+    .auth-icon i { font-size: 1.5rem; color: #ffffff; }
+
+    .auth-title { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; }
+    .auth-subtitle { color: #64748b; font-size: 0.875rem; margin: 0; }
+
+    /* Поля ввода */
+    .auth-form .form-label { font-weight: 500; color: #334155; font-size: 0.875rem; margin-bottom: 0.4rem; }
+
+    .input-group-text {
+        background: #f8fafc; border-right: none; color: #64748b; transition: all 0.2s;
+    }
+    .input-group .form-control { border-left: none; }
+
+    .input-group:focus-within .input-group-text {
+        background: #f0f7ff; color: #2563eb; border-color: #2563eb;
+    }
+    .input-group:focus-within .form-control {
+        border-color: #2563eb; box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.15);
+    }
+
+    /* Кнопка */
+    .btn-primary {
+        background: #2563eb; border-color: #2563eb;
+        transition: all 0.2s ease;
+    }
+    .btn-primary:hover {
+        background: #1d4ed8; border-color: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+    .btn-primary:active { transform: translateY(0); box-shadow: none; }
+
+    /* Футер */
+    .auth-footer {
+        text-align: center; margin-top: 1.5rem; padding-top: 1.5rem;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    /* Анимация появления */
+    .fade-in-up {
+        animation: fadeInUp 0.4s ease-out both;
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 576px) {
+        .auth-card { padding: 1.5rem; }
+    }
+</style>
 {% endblock %}

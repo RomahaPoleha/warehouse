@@ -3,7 +3,7 @@
 
 {% block content %}
 <h2 class="h5 text-secondary mb-3 pb-2 border-bottom">
-    Видеостена
+    ИК рамки
 </h2>
 
 <!-- ПОИСК -->
@@ -13,9 +13,9 @@
             <div class="flex-grow-1" style="min-width: 250px;">
                 <div class="input-group">
                     <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" name="q" class="form-control" placeholder="Наименование, модель, модификация..." value="{{ query }}" autocomplete="off">
+                    <input type="text" name="q" class="form-control" placeholder="Наименование, модель, артикул..." value="{{ query }}" autocomplete="off">
                     {% if query %}
-                    <a href="{% url 'videowall_list' %}" class="btn btn-outline-secondary" title="Сбросить"><i class="bi bi-x-lg"></i></a>
+                    <a href="{% url 'ir_frames_list' %}" class="btn btn-outline-secondary" title="Сбросить"><i class="bi bi-x-lg"></i></a>
                     {% endif %}
                 </div>
             </div>
@@ -32,18 +32,18 @@
                 <tr>
                     <th style="width: 90px;" class="text-center">Фото</th>
                     <th>Наименование / Идентификаторы</th>
-                    <th style="width: 180px;" class="text-center">В наличии (шт)</th>
+                    <th style="width: 180px;" class="text-end">В наличие (шт)</th>
                     <th style="width: 130px;">Ячейка</th>
                     <th style="width: 140px;" class="text-end">Действия</th>
                 </tr>
             </thead>
             <tbody>
-                {% for video in videowall_list %}
+                {% for ir in ir_frames %}
                 <tr class="warehouse-row">
                     <td class="text-center">
-                        {% if video.image %}
-                            <img src="{{ video.image }}" class="warehouse-thumb" alt="{{ video.name }}"
-                                 data-bs-toggle="modal" data-bs-target="#imageModal" data-bs-src="{{ video.image }}">
+                        {% if ir.image %}
+                            <img src="{{ ir.image }}" class="warehouse-thumb" alt="{{ ir.name }}"
+                                 data-bs-toggle="modal" data-bs-target="#imageModal" data-bs-src="{{ ir.image }}">
                         {% else %}
                             <div class="warehouse-thumb-empty">
                                 <i class="bi bi-image"></i>
@@ -51,34 +51,33 @@
                         {% endif %}
                     </td>
                     <td>
-                        <div class="fw-semibold text-dark">{{ video.name }}</div>
-                        {% if video.model %}
-                        <div class="small inventory-code text-muted mt-1">Модель: {{ video.model }}</div>
+                        <div class="fw-semibold text-dark">{{ ir.name }}</div>
+                        {% if ir.model or ir.modification %}
+                        <div class="small inventory-code text-muted mt-1">
+                            {% if ir.model %}Модель: {{ ir.model }}{% endif %}
+                            {% if ir.modification %} | {{ ir.modification }}{% endif %}
+                        </div>
                         {% endif %}
-                        {% if video.modification %}
-                        <div class="small text-muted mt-1">Модификация: {{ video.modification }}</div>
-                        {% endif %}
-                        {% if video.description %}
-                        <div class="small text-muted text-truncate mt-1" style="max-width: 400px;" title="{{ video.description }}">
-                            {{ video.description }}
+                        {% if ir.description %}
+                        <div class="small text-muted text-truncate mt-1" style="max-width: 450px;" title="{{ board.description }}">
+                            {{ ir.description }}
                         </div>
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <span class="inventory-qty {% if video.quantity < 5 %}low-stock{% endif %}">
-                            {{ video.quantity }}
+                        <span class="inventory-qty {% if board.quantity < 5 %}low-stock{% endif %}">
+                            {{ ir.quantity }}
                         </span>
                     </td>
                     <td>
-                        <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>{{ video.cells|default:"—" }}</span>
+                        <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>{{ ir.cells|default:"—" }}</span>
                     </td>
                     <td class="text-end">
-                        <a href="{% url 'request_item' video.pk %}?next=videowall_list" class="btn btn-sm btn-outline-primary">
+                        <a href="{% url 'request_item' ir.pk %}?next=ir_frames_list" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-box-arrow-up me-1"></i>Запросить
                         </a>
                     </td>
                 </tr>
-
                 {% empty %}
                 <tr>
                     <td colspan="5" class="text-center py-5">
@@ -86,11 +85,11 @@
                         {% if has_query %}
                             <h6 class="mb-2">Ничего не найдено</h6>
                             <p class="text-muted mb-3 small">По запросу «{{ query }}» нет результатов.</p>
-                            <a href="{% url 'videowall_list' %}" class="btn btn-outline-primary btn-sm">Сбросить фильтр</a>
+                            <a href="{% url 'ir_frames_list' %}" class="btn btn-outline-primary btn-sm">Сбросить фильтр</a>
                         {% else %}
                             <h6 class="mb-2">Список пуст</h6>
-                            <p class="text-muted mb-3 small">В базе данных пока нет оборудования для видеостен.</p>
-                            <a href="{% url 'admin:accounting_equipment_add' %}" class="btn btn-success btn-sm">
+                            <p class="text-muted small">В этом разделе пока нет записей.</p>
+                        <a href="{% url 'admin:accounting_equipment_add' %}" class="btn btn-success btn-sm">
                                 <i class="bi bi-plus-lg me-1"></i>Добавить оборудование
                             </a>
                         {% endif %}
@@ -102,7 +101,7 @@
     </div>
 </div>
 
-<!-- МОДАЛКА (ПРОВЕРЕННАЯ) -->
+<!-- МОДАЛКА (ИСПРАВЛЕНА) -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
