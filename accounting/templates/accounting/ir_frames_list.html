@@ -53,7 +53,6 @@
                     </td>
                     <td>
                         <div class="fw-semibold text-dark">{{ ir.name }}</div>
-                        <div class="fw-semibold text-dark">{{ ir.length_cm}}</div>
                         {% if ir.model or ir.modification %}
                         <div class="small inventory-code text-muted mt-1">
                             {% if ir.model %}Модель: {{ ir.model }}{% endif %}
@@ -69,6 +68,9 @@
                     <td class="text-center">
                         <span class="inventory-qty {% if board.quantity < 5 %}low-stock{% endif %}">
                             {{ ir.quantity }}
+                        </span>
+                        <span class="inventory-qty">
+                            {{ ir.length_cm }}
                         </span>
                     </td>
                     <td>
