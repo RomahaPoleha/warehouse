@@ -206,7 +206,7 @@
                 </a>
             {% endif %}
 
-            {% if user.is_staff %}
+                {% if user.is_staff %}
                 <a href="{% url 'request_list' %}" class="nav-link {% if 'request_list' in request.resolver_match.view_name %}active{% endif %}">
                     <i class="bi bi-inbox"></i> Запросы
                 </a>

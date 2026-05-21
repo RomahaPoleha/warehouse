@@ -13,9 +13,6 @@ import datetime
 from django.http import HttpResponse
 
 
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
 # @csrf_exempt
 # def create_superuser(request):
 #     # Проверяем, есть ли уже admin
