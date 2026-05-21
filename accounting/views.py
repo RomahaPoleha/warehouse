@@ -7,6 +7,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.db.models import Q
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment
+import datetime
+from django.http import HttpResponse
 
 
 from django.http import HttpResponse
@@ -243,3 +247,77 @@ def history_user(request):
     ).select_related('equipment')  # ← Оптимизация: сразу подгружаем оборудование
 
     return render(request, "accounting/my_request.html", {"user_requests": user_requests})
+
+
+@login_required
+def export_equipment_to_excel(request):
+    """Выгружает всё оборудование в Excel"""
+    # Создаём книгу и лист
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Оборудование"
+
+    # Заголовки с форматированием
+    headers = [
+        'Название', 'Модель', 'Модификация',
+        'Длина (см)', 'Количество', 'Ячейки',
+        'Описание', 'Процессор'
+    ]
+
+    # Стиль заголовка
+    header_fill = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF")
+
+    for col, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col, value=header)
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(horizontal="center")
+
+    # Данные
+    for row, equip in enumerate(Equipment.objects.all().order_by('id'), start=2):
+            ws.cell(row=row, column=1, value=equip.name)
+            ws.cell(row=row, column=2, value=equip.model)
+            if not equip.modification:
+                equip.modification = 'x'
+                ws.cell(row=row, column=3, value=equip.modification)
+            else:
+                ws.cell(row=row, column=3, value=equip.modification)
+            if not equip.length_cm:
+                equip.length_cm = 'x'
+                ws.cell(row=row, column=4, value=equip.length_cm)
+            else:
+                ws.cell(row=row, column=4, value=equip.length_cm)
+            ws.cell(row=row, column=5, value=equip.quantity)
+            ws.cell(row=row, column=6, value=equip.cells)
+            if not equip.description:
+                equip.description = 'x'
+                ws.cell(row=row, column=7, value=equip.description)
+            else:
+                ws.cell(row=row, column=7, value=equip.description)
+            if not equip.cpu:
+                equip.cpu = 'x'
+                ws.cell(row=row, column=8, value=equip.cpu)
+            else:
+                ws.cell(row=row, column=8, value=equip.cpu)
+
+
+    # Автоширина колонок
+    for column in ws.columns:
+        max_length = 0
+        col_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        ws.column_dimensions[col_letter].width = min(max_length + 4, 50)
+
+    # Ответ с файлом
+    filename = f'equipment_{datetime.date.today()}.xlsx'
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    wb.save(response)
+
+    return response

@@ -32,7 +32,7 @@
                 <tr>
                     <th style="width: 90px;" class="text-center">Фото</th>
                     <th>Наименование / Идентификаторы</th>
-                    <th>Длина рамки в см</th>
+                    <th style="width: 180px;" class="text-center">Длина рамки в см</th>
                     <th style="width: 180px;" class="text-end">В наличие (шт)</th>
                     <th style="width: 130px;">Ячейка</th>
                     <th style="width: 140px;" class="text-end">Действия</th>
@@ -60,19 +60,19 @@
                         </div>
                         {% endif %}
                         {% if ir.description %}
-                        <div class="small text-muted text-truncate mt-1" style="max-width: 450px;" title="{{ board.description }}">
+                        <div class="small text-muted text-truncate mt-1" style="max-width: 450px;" title="{{ ir.description }}">
                             {{ ir.description }}
                         </div>
                         {% endif %}
+                        <td class="text-center fw-semibold text-dark">
+                    {{ ir.length_cm|default:"—" }}
+                        </td>
                     </td>
                     <td class="text-center">
-                        <span class="inventory-qty {% if board.quantity < 5 %}low-stock{% endif %}">
+                        <span class="inventory-qty {% if ir.quantity < 5 %}low-stock{% endif %}">
                             {{ ir.quantity }}
                         </span>
-                        <span class="inventory-qty">
-                            {{ ir.length_cm }}
-                        </span>
-                    </td>
+                        </td>
                     <td>
                         <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>{{ ir.cells|default:"—" }}</span>
                     </td>
