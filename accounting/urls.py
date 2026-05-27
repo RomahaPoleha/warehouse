@@ -20,5 +20,6 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'), # Страница выхода
     path('my_requests/', views.history_user, name='history_user'), # История пользователя
     path('videowall/', views.videowall, name='videowall_list'),
-    path('export/excel/', views.export_equipment_to_excel, name='export_excel'),
+    path('export/excel/', views.export_equipment_to_excel, name='export_excel'), # путь для экпспорта в Exel
+    path('product/<int:product_id>/subtract/', views.subtract_quantity_view, name='product'), # путь на страницу для списания
 ]

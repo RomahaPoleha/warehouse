@@ -11,7 +11,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import datetime
 from django.http import HttpResponse
-
+from .forms import SubtractQuantityForm
+from django.db import transaction
 
 # @csrf_exempt
 # def create_superuser(request):
@@ -318,3 +319,34 @@ def export_equipment_to_excel(request):
     wb.save(response)
 
     return response
+
+@transaction.atomic
+def subtract_quantity_view(request, product_id):
+    if request.method == 'POST':
+        form = SubtractQuantityForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+
+            # Блокируем строку на время транзакции
+            product = Equipment.objects.select_for_update().get(pk=product_id)
+
+            if product.quantity >= amount:
+                product.quantity -= amount
+                product.save()
+
+                messages.success(request, f"Успешно списано {amount} шт.")
+
+                # Возврат на страницу, откуда пришли
+                next_url = request.GET.get('next', 'board_android_list')
+                return redirect(next_url)
+            else:
+                messages.error(request, f"Недостаточно товара. Доступно: {product.quantity} шт.")
+    else:
+        # Для GET-запроса — обычный get_object_or_404 (без транзакции)
+        product = get_object_or_404(Equipment, pk=product_id)  # ← ИСПРАВЛЕНО!
+        form = SubtractQuantityForm()
+
+    return render(request, 'accounting/subtract_quantity.html', {
+        'form': form,
+        'product': product,
+    })
