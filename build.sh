@@ -12,5 +12,3 @@ python manage.py collectstatic --noinput
 # === ПРИМЕНЯЕМ МИГРАЦИИ (ОБЯЗАТЕЛЬНО!) ===
 python manage.py migrate --noinput
 
-# === СОЗДАЁМ СУПЕРПОЛЬЗОВАТЕЛЯ ===
-python manage.py shell -c "from django.contrib.auth.models import User; User.objects.filter(username='admin').exists() or User.objects.create_superuser('admin', 'admin@example.com', 'admin123')"
