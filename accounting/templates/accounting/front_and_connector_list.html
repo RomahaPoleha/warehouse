@@ -70,12 +70,16 @@
                         <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>{{ front.cells|default:"—" }}</span>
                     </td>
                     <td class="text-end">
+                        {% if not user.is_superuser %}
                         <a href="{% url 'request_item' front.pk %}?next=front_and_connector_list" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-box-arrow-up me-1"></i>Запросить
                         </a>
+                        {% endif %}
+                        {% if user.is_superuser %}
                         <a href="{% url 'product' front.pk %}?next=front_and_connector_list" class="btn btn-sm btn-outline-success">
                             <i class="bi bi-cart-dash"></i>  Списание
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
 

@@ -78,9 +78,11 @@
                             <i class="bi bi-box-arrow-up me-1"></i>Запросить
                         {% endif %}
                         </a>
+                        {% if user.is_superuser %}
                         <a href="{% url 'product' board.pk %}?next=board_android_list" class="btn btn-sm btn-outline-success">
                             <i class="bi bi-cart-dash"></i>  Списание
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
                 {% empty %}
