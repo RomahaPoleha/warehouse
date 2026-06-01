@@ -75,11 +75,16 @@
                             <i class="bi bi-box-arrow-up me-1"></i>Запросить
                             {% endif %}
                         </a>
+                        <div class="d-flex gap-2">
                         {% if user.is_superuser %}
-                        <a href="{% url 'product' tcon.pk %}?next=tcon_list" class="btn btn-sm btn-outline-success">
+                        <a href="{% url 'product' tcon.pk %}?next=tcon_list" class="btn btn-sm btn-outline-danger">
                             <i class="bi bi-cart-dash"></i>  Списание
                         </a>
+                            <a href="{% url 'add_product' tcon.pk %}?next=tcon_list" class="btn btn-sm btn-outline-success ms-2">
+                            <i class="bi bi-cart-plus-fill"></i> Добавить
+                        </a>
                         {% endif %}
+                            </div>
                     </td>
                 </tr>
 
