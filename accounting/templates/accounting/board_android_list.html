@@ -73,16 +73,24 @@
                         <span class="small text-muted"><i class="bi bi-geo-alt me-1"></i>{{ board.cells|default:"—" }}</span>
                     </td>
                     <td class="text-end">
+
                         {% if not user.is_superuser %}
                         <a href="{% url 'request_item' board.pk %}?next=board_android_list" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-box-arrow-up me-1"></i>Запросить
                         {% endif %}
                         </a>
+                        <div class="d-flex gap-2">
                         {% if user.is_superuser %}
-                        <a href="{% url 'product' board.pk %}?next=board_android_list" class="btn btn-sm btn-outline-success">
-                            <i class="bi bi-cart-dash"></i>  Списание
+                        <a href="{% url 'product' board.pk %}?next=board_android_list" class="btn btn-sm btn-outline-danger ">
+                            <i class="bi bi-cart-dash"></i>  Списать
                         </a>
                         {% endif %}
+                        {% if user.is_superuser %}
+                        <a href="{% url 'add_product' board.pk %}?next=board_android_list" class="btn btn-sm btn-outline-success ms-2">
+                            <i class="bi bi-cart-plus-fill"></i> Добавить
+                        </a>
+                        {% endif %}
+                        </div>
                     </td>
                 </tr>
                 {% empty %}

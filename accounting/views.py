@@ -320,6 +320,7 @@ def export_equipment_to_excel(request):
 
     return response
 
+# Уменьшение количества
 @transaction.atomic
 def subtract_quantity_view(request, product_id):
     if request.method == 'POST':
@@ -337,7 +338,7 @@ def subtract_quantity_view(request, product_id):
                 messages.success(request, f"Успешно списано {amount} шт.")
 
                 # Возврат на страницу, откуда пришли
-                next_url = request.GET.get('next', 'board_android_list')
+                next_url = request.GET.get('next', 'home')
                 return redirect(next_url)
             else:
                 messages.error(request, f"Недостаточно товара. Доступно: {product.quantity} шт.")
@@ -349,4 +350,35 @@ def subtract_quantity_view(request, product_id):
     return render(request, 'accounting/subtract_quantity.html', {
         'form': form,
         'product': product,
+        'previous_url': request.META.get('HTTP_REFERER', '/'),
+    })
+
+# Добавление количества
+@transaction.atomic
+def add_quantity_view(request, product_id):
+    if request.method == 'POST':
+        form = SubtractQuantityForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+
+            # Блокируем строку на время транзакции
+            add_product = Equipment.objects.select_for_update().get(pk=product_id)
+
+
+            add_product.quantity += amount
+            add_product.save()
+
+            messages.success(request, f"Успешно добавлено {amount} шт.")
+
+            # Возврат на страницу, откуда пришли
+            next_url = request.GET.get('next', 'board_android_list')
+            return redirect(next_url)
+    else:
+        add_product = get_object_or_404(Equipment, pk=product_id)
+        form = SubtractQuantityForm()
+
+    return render(request, 'accounting/add_quantity.html', {
+        'form': form,
+        'add_product': add_product,
+        'previous_url': request.META.get('HTTP_REFERER', '/'),
     })

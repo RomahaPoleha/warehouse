@@ -1,0 +1,77 @@
+{% extends "accounting/base.html" %}
+
+{% block content %}
+<h2 class="h5 text-secondary mb-3 pb-2 border-bottom">
+    📦 Добавление на склад
+</h2>
+
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-xl-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <!-- Информационный блок товара -->
+                <div class="p-3 bg-light rounded mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted">Товар:</span>
+                        <span class="fw-semibold text-dark">{{ add_product.name }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Доступно на складе:</span>
+                        <span class="inventory-qty {% if add_product.quantity < 5 %}low-stock{% endif %}">
+                            {{ add_product.quantity }} шт.
+                        </span>
+                    </div>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.amount.id_for_label }}" class="form-label fw-medium">
+                            Количество для добавления
+                        </label>
+                        <div class="input-group">
+                            {{ form.amount }}
+                            <span class="input-group-text text-muted">шт.</span>
+                        </div>
+                        {% if form.amount.errors %}
+                            <div class="text-danger small mt-2">
+                                <i class="bi bi-exclamation-circle me-1"></i>{{ form.amount.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{{ previous_url }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>Отмена
+                        </a>
+                        <button type="submit" class="btn btn-warning px-4">
+                            <i class="bi bi-check2-circle me-1"></i>Подтвердить добавление
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    /* Повторяем стили из основного списка для единообразия */
+    .inventory-qty {
+        font-family: var(--bs-font-monospace);
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #343a40;
+    }
+    .inventory-qty.low-stock {
+        color: #dc3545;
+    }
+    /* Небольшие правки для формы */
+    .card-body .form-control, .card-body .form-select {
+        background-color: #fff;
+    }
+</style>
+{% endblock %}

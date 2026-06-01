@@ -21,5 +21,6 @@ urlpatterns = [
     path('my_requests/', views.history_user, name='history_user'), # История пользователя
     path('videowall/', views.videowall, name='videowall_list'),
     path('export/excel/', views.export_equipment_to_excel, name='export_excel'), # путь для экпспорта в Exel
-    path('product/<int:product_id>/subtract/', views.subtract_quantity_view, name='product'), # путь на страницу для списания
+    path('product/<int:product_id>/subtract/', views.subtract_quantity_view, name='product'),# путь на страницу для списания
+    path('product/<int:product_id>/add/', views.add_quantity_view, name='add_product'),
 ]
